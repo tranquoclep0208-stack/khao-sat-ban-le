@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sàng lọc – Khảo sát nghiên cứu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1520;--surface:#111827;--surface2:#1e293b;--border:#1e293b;
+  --text:#f1f5f9;--text-sub:#94a3b8;--text-mute:#475569;
+  --accent:#2563eb;--accent-h:#1d4ed8;--accent-soft:#1e3a5f;
+  --radio-bg:#1e293b;--radio-bd:#334155;
+  --radio-sel-bg:#1e3a5f;--radio-sel-bd:#3b82f6;
+  --danger:#ef4444;--header-bg:#0a1628;
+  --note-bg:#1e293b;--note-bd:#334155;--note-text:#94a3b8;
+  --step-done:#3b82f6;--step-idle:#334155;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Be Vietnam Pro',sans-serif;
+  background:var(--bg);min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;
+  padding-bottom:64px;
+}
+/* header */
+.hbar{
+  width:100%;background:var(--header-bg);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  padding:13px 28px;display:flex;
+  justify-content:space-between;align-items:center;
+  position:sticky;top:0;z-index:10;
+}
+.hbar-left{font-size:13px;color:#94a3b8}
+.hbar-left strong{color:#e2e8f0;font-weight:600}
+.hbar-right{font-size:12px;color:#64748b}
+
+/* card */
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;padding:36px 44px 32px;
+  width:100%;max-width:700px;margin-top:36px;
+  box-shadow:0 8px 32px rgba(0,0,0,.28);
+}
+
+/* steps */
+.steps{display:flex;gap:6px;margin-bottom:28px}
+.step{height:4px;border-radius:2px;background:var(--step-idle);flex:1;transition:background .3s}
+.step.done{background:var(--step-done)}
+.step.active{background:var(--step-done);opacity:.55}
+
+/* section label */
+.section-badge{
+  display:inline-block;font-size:11px;font-weight:600;
+  color:var(--accent);background:var(--accent-soft);
+  border:1px solid #1e40af;border-radius:20px;
+  padding:3px 12px;margin-bottom:20px;letter-spacing:.4px;
+}
+
+/* question block */
+.q-block{margin-bottom:28px}
+.q-label{
+  font-size:14px;font-weight:600;color:var(--text);
+  line-height:1.6;margin-bottom:12px;
+}
+.q-label span.req{color:var(--danger);margin-left:2px}
+
+/* radio options */
+.radios{display:flex;flex-direction:column;gap:8px}
+.radio-opt{
+  display:flex;align-items:center;gap:14px;
+  padding:12px 16px;
+  border:1.5px solid var(--radio-bd);border-radius:9px;
+  background:var(--radio-bg);cursor:pointer;
+  transition:border-color .15s,background .15s,box-shadow .15s;
+  user-select:none;
+}
+.radio-opt:hover{border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+.radio-opt.sel{border-color:var(--radio-sel-bd);background:var(--radio-sel-bg)}
+.radio-opt input{display:none}
+.rdot{
+  width:18px;height:18px;border-radius:50%;
+  border:2px solid var(--radio-bd);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  transition:border-color .15s;
+}
+.radio-opt.sel .rdot{border-color:var(--accent)}
+.rdot::after{
+  content:'';width:8px;height:8px;border-radius:50%;
+  background:var(--accent);opacity:0;
+  transition:opacity .15s,transform .15s;transform:scale(.5);
+}
+.radio-opt.sel .rdot::after{opacity:1;transform:scale(1)}
+.rlabel{font-size:13.5px;color:var(--text);line-height:1.5}
+
+/* note box */
+.note{
+  background:var(--note-bg);border:1px solid var(--note-bd);
+  border-left:3px solid var(--accent);
+  border-radius:8px;padding:14px 16px;
+  font-size:13px;color:var(--note-text);
+  line-height:1.7;margin-bottom:24px;
+}
+
+/* error */
+.err{font-size:12px;color:var(--danger);margin-top:6px;display:none}
+.err.show{display:block}
+
+/* divider */
+.divider{border:none;border-top:1px solid var(--border);margin:24px 0}
+
+/* footer */
+.footer{display:flex;justify-content:space-between;align-items:center;padding-top:20px}
+.btn{
+  font-family:inherit;font-size:14px;font-weight:600;
+  padding:11px 32px;border:none;border-radius:8px;
+  cursor:pointer;transition:background .15s,opacity .15s,transform .1s;
+}
+.btn:active{transform:scale(.97)}
+.btn-back{background:var(--surface2);color:var(--text-sub)}
+.btn-back:hover{background:#283548}
+.btn-next{background:var(--accent);color:#fff}
+.btn-next:hover:not(:disabled){background:var(--accent-h)}
+.btn-next:disabled{opacity:.35;cursor:not-allowed}
+
+@media(max-width:600px){
+  .card{padding:24px 16px 20px;margin-top:20px}
+  .hbar{padding:12px 16px}
+}
+</style>
+</head>
+<body>
+
+<div class="hbar">
+  <div class="hbar-left"><strong>Trường Đại học Tôn Đức Thắng</strong> · Khảo sát nghiên cứu</div>
+  <div class="hbar-right">Study 2 · Thí nghiệm</div>
+</div>
+
+<div class="card">
+  <!-- step: trang 2/4 -->
+  <div class="steps">
+    <div class="step done"></div>
+    <div class="step active"></div>
+    <div class="step"></div>
+    <div class="step"></div>
+  </div>
+
+  <div class="section-badge">PHẦN I · THÔNG TIN SÀNG LỌC</div>
+
+  <!-- Q1: Độ tuổi -->
+  <div class="q-block" id="block-age">
+    <p class="q-label">Độ tuổi của bạn:<span class="req">*</span></p>
+    <div class="radios" id="radios-age">
+      <label class="radio-opt"><input type="radio" name="age" value="under18"><div class="rdot"></div><span class="rlabel">Dưới 18 tuổi</span></label>
+      <label class="radio-opt"><input type="radio" name="age" value="18-24"><div class="rdot"></div><span class="rlabel">18–24 tuổi</span></label>
+      <label class="radio-opt"><input type="radio" name="age" value="25-34"><div class="rdot"></div><span class="rlabel">25–34 tuổi</span></label>
+      <label class="radio-opt"><input type="radio" name="age" value="35-44"><div class="rdot"></div><span class="rlabel">35–44 tuổi</span></label>
+      <label class="radio-opt"><input type="radio" name="age" value="45-54"><div class="rdot"></div><span class="rlabel">45–54 tuổi</span></label>
+      <label class="radio-opt"><input type="radio" name="age" value="55+"><div class="rdot"></div><span class="rlabel">Từ 55 tuổi trở lên</span></label>
+    </div>
+    <p class="err" id="err-age">Vui lòng chọn độ tuổi của bạn.</p>
+  </div>
+
+  <!-- note -->
+  <div class="note">
+    Ở các câu tiếp theo, <strong>"app/website của chuỗi"</strong> là ứng dụng hoặc website mua sắm chính thức do chính chuỗi bán lẻ cung cấp. Không tính đơn hàng đặt qua sàn thương mại điện tử hoặc ứng dụng giao hàng của bên thứ ba.
+  </div>
+
+  <!-- Q2: Kênh mua hàng -->
+  <div class="q-block" id="block-channel">
+    <p class="q-label">Trong <strong>6–12 tháng qua</strong>, bạn đã mua hàng qua cả hai kênh của cùng một chuỗi siêu thị, siêu thị mini hoặc cửa hàng tiện lợi nào chưa?<span class="req">*</span></p>
+    <div class="radios" id="radios-channel">
+      <label class="radio-opt"><input type="radio" name="channel" value="both"><div class="rdot"></div><span class="rlabel">Có, tôi đã mua cả tại cửa hàng và qua app/website chính thức của cùng một chuỗi</span></label>
+      <label class="radio-opt"><input type="radio" name="channel" value="store-only"><div class="rdot"></div><span class="rlabel">Tôi chỉ mua tại cửa hàng</span></label>
+      <label class="radio-opt"><input type="radio" name="channel" value="app-only"><div class="rdot"></div><span class="rlabel">Tôi chỉ mua qua app/website của chuỗi</span></label>
+      <label class="radio-opt"><input type="radio" name="channel" value="none"><div class="rdot"></div><span class="rlabel">Tôi chưa từng mua qua các kênh trên</span></label>
+      <label class="radio-opt"><input type="radio" name="channel" value="unsure"><div class="rdot"></div><span class="rlabel">Không nhớ / Không chắc</span></label>
+    </div>
+    <p class="err" id="err-channel">Vui lòng chọn một đáp án.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="footer">
+    <button class="btn btn-back" id="btn-back">← Quay lại</button>
+    <button class="btn btn-next" id="btn-next">Tiếp →</button>
+  </div>
+</div>
+
+<script>
+  // ── radio select helper ──────────────────────────────────────
+  function initRadios(name, errId) {
+    const opts = document.querySelectorAll(`input[name="${name}"]`);
+    opts.forEach(inp => {
+      inp.closest('.radio-opt').addEventListener('click', () => {
+        document.querySelectorAll(`input[name="${name}"]`).forEach(o =>
+          o.closest('.radio-opt').classList.remove('sel'));
+        inp.closest('.radio-opt').classList.add('sel');
+        inp.checked = true;
+        document.getElementById(errId).classList.remove('show');
+      });
+    });
+  }
+  initRadios('age',     'err-age');
+  initRadios('channel', 'err-channel');
+
+  // ── back ─────────────────────────────────────────────────────
+  document.getElementById('btn-back').addEventListener('click', () => {
+    window.location.href = 'index.html';
+  });
+
+  // ── next ─────────────────────────────────────────────────────
+  document.getElementById('btn-next').addEventListener('click', () => {
+    const age     = document.querySelector('input[name="age"]:checked');
+    const channel = document.querySelector('input[name="channel"]:checked');
+    let valid = true;
+
+    if (!age) {
+      document.getElementById('err-age').classList.add('show'); valid = false;
+    }
+    if (!channel) {
+      document.getElementById('err-channel').classList.add('show'); valid = false;
+    }
+    if (!valid) return;
+
+    // điều kiện dừng
+    // 1. Dưới 18 tuổi → dừng
+    if (age.value === 'under18') {
+      window.location.href = 'thankyou.html?reason=screen'; return;
+    }
+    // 2. Chưa mua đa kênh → dừng (chỉ store-only, app-only, none, unsure)
+    if (channel.value !== 'both') {
+      window.location.href = 'thankyou.html?reason=screen'; return;
+    }
+    // đủ điều kiện → trang câu hỏi chính
+    window.location.href = 'survey.html';
+  });
+</script>
+</body>
+</html>

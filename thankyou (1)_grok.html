@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cảm ơn – Khảo sát nghiên cứu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1520;--surface:#ffffff;--border:#e2e8f0;
+  --text:#0f172a;--text-sub:#475569;--text-mute:#94a3b8;
+  --accent:#2563eb;--accent-soft:#dbeafe;
+  --green:#16a34a;--green-soft:#dcfce7;--green-bd:#bbf7d0;
+  --amber:#d97706;--amber-soft:#fef3c7;--amber-bd:#fde68a;
+  --header-bg:#0f172a;
+}
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#060d18;--surface:#111827;--border:#1e293b;
+    --text:#f1f5f9;--text-sub:#94a3b8;
+    --green-soft:#052e16;--green-bd:#166534;
+    --amber-soft:#1c1400;--amber-bd:#78350f;
+    --header-bg:#0a1628;
+  }
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Be Vietnam Pro',sans-serif;
+  background:var(--bg);min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;
+  padding-bottom:56px;
+}
+.hbar{
+  width:100%;background:var(--header-bg);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  padding:13px 28px;display:flex;
+  justify-content:space-between;align-items:center;
+  position:sticky;top:0;z-index:10;
+}
+.hbar-left{font-size:13px;color:#94a3b8}
+.hbar-left strong{color:#e2e8f0;font-weight:600}
+.hbar-right{font-size:12px;color:#64748b}
+
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;padding:48px 48px 40px;
+  width:100%;max-width:600px;margin-top:48px;
+  box-shadow:0 8px 32px rgba(0,0,0,.18);
+  text-align:center;
+}
+
+/* icon circle */
+.icon-wrap{
+  width:72px;height:72px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 24px;font-size:32px;
+  transition:background .3s,border-color .3s;
+}
+.icon-wrap.done {background:var(--green-soft);border:2px solid var(--green-bd)}
+.icon-wrap.stop {background:var(--amber-soft);border:2px solid var(--amber-bd)}
+
+.title{font-size:22px;font-weight:700;color:var(--text);margin-bottom:12px}
+.body {font-size:14px;color:var(--text-sub);line-height:1.8;margin-bottom:28px}
+.body strong{color:var(--text);font-weight:600}
+
+.divider{border:none;border-top:1px solid var(--border);margin:0 0 24px}
+
+.contact{
+  font-size:13px;color:var(--text-mute);line-height:1.7;
+}
+.contact strong{color:var(--text-sub)}
+
+@media(max-width:600px){
+  .card{padding:36px 20px 32px;margin-top:28px}
+  .hbar{padding:12px 16px}
+}
+</style>
+</head>
+<body>
+
+<div class="hbar">
+  <div class="hbar-left"><strong>Trường Đại học Tôn Đức Thắng</strong> · Khảo sát nghiên cứu</div>
+  <div class="hbar-right">Study 2 · Thí nghiệm</div>
+</div>
+
+<div class="card" id="card">
+  <div class="icon-wrap" id="icon">🙏</div>
+  <h1 class="title" id="title">Cảm ơn bạn!</h1>
+  <p class="body" id="body">Bạn đã chọn không tham gia khảo sát.<br>Chúng tôi tôn trọng quyết định của bạn.<br><br>Nếu thay đổi ý định, bạn có thể <a href="index.html" style="color:var(--accent);text-decoration:underline">quay lại trang đầu</a>.</p>
+
+  <hr class="divider">
+  <p class="contact">
+    Liên hệ sinh viên: <strong>Lê Minh Triết</strong><br>
+    <strong>724h0437@student.edu.vn</strong>
+  </p>
+</div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const reason = params.get('reason');
+  const icon   = document.getElementById('icon');
+  const title  = document.getElementById('title');
+  const body   = document.getElementById('body');
+
+  if (reason === 'complete') {
+    // hoàn thành khảo sát
+    icon.textContent  = '✅';
+    icon.className    = 'icon-wrap done';
+    title.textContent = 'Cảm ơn bạn đã tham gia!';
+    body.innerHTML    = 'Câu trả lời của bạn đã được ghi nhận và sẽ chỉ dùng cho mục đích nghiên cứu.<br><br>'
+      + '<strong>Mục đích nghiên cứu:</strong> Tìm hiểu cách khách hàng cảm nhận về gợi ý sản phẩm AI trên app bán lẻ, '
+      + 'từ đó đề xuất cải thiện trải nghiệm mua sắm đa kênh tại Việt Nam.';
+  } else if (reason === 'screen') {
+    // không đủ điều kiện sàng lọc
+    icon.textContent  = '🙏';
+    icon.className    = 'icon-wrap stop';
+    title.textContent = 'Cảm ơn bạn!';
+    body.innerHTML    = 'Rất tiếc, bạn <strong>không đáp ứng tiêu chí tham gia</strong> của nghiên cứu này.<br><br>'
+      + 'Nghiên cứu yêu cầu người tham gia đã mua sắm tại cửa hàng và dùng app/website của cùng một thương hiệu bán lẻ trong 6 tháng qua.<br><br>'
+      + 'Chúng tôi rất trân trọng thời gian bạn đã dành cho khảo sát.';
+  } else {
+    // decline (mặc định)
+    icon.textContent = '🙏';
+    icon.className   = 'icon-wrap stop';
+  }
+</script>
+</body>
+</html>
