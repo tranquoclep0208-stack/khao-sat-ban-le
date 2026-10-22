@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Khảo sát nghiên cứu – Tôn Đức Thắng</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* ── tokens ── */
+:root {
+  --bg:           #0d1520;
+  --surface:      #ffffff;
+  --surface2:     #f8fafc;
+  --border:       #e2e8f0;
+  --text:         #0f172a;
+  --text-sub:     #475569;
+  --text-mute:    #94a3b8;
+  --accent:       #2563eb;
+  --accent-h:     #1d4ed8;
+  --accent-soft:  #dbeafe;
+  --radio-bg:     #f8fafc;
+  --radio-bd:     #cbd5e1;
+  --radio-sel-bg: #eff6ff;
+  --radio-sel-bd: #2563eb;
+  --danger:       #dc2626;
+  --header-bg:    #0f172a;
+  --step-done:    #2563eb;
+  --step-idle:    #cbd5e1;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#060d18;--surface:#111827;--surface2:#1e293b;--border:#1e293b;
+    --text:#f1f5f9;--text-sub:#94a3b8;--text-mute:#475569;
+    --accent:#3b82f6;--accent-h:#2563eb;--accent-soft:#1e3a5f;
+    --radio-bg:#1e293b;--radio-bd:#334155;
+    --radio-sel-bg:#1e3a5f;--radio-sel-bd:#3b82f6;
+    --header-bg:#0a1628;--step-idle:#334155;
+  }
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  font-family:'Be Vietnam Pro',sans-serif;
+  background:var(--bg);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding-bottom:56px;
+}
+
+/* ── header bar ── */
+.hbar{
+  width:100%;
+  background:var(--header-bg);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  padding:13px 28px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:sticky;top:0;z-index:10;
+}
+.hbar-left{font-size:13px;color:#94a3b8}
+.hbar-left strong{color:#e2e8f0;font-weight:600}
+.hbar-right{font-size:12px;color:#64748b;letter-spacing:.3px}
+
+/* ── card ── */
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:40px 48px 36px;
+  width:100%;max-width:700px;
+  margin-top:40px;
+  box-shadow:0 8px 32px rgba(0,0,0,.18);
+}
+
+/* ── step dots ── */
+.steps{display:flex;gap:6px;margin-bottom:28px}
+.step{height:4px;border-radius:2px;background:var(--step-idle);flex:1;transition:background .3s}
+.step.active{background:var(--step-done)}
+
+/* ── badge ── */
+.badge{
+  display:inline-block;
+  font-size:11px;font-weight:600;
+  color:var(--accent);
+  background:var(--accent-soft);
+  border:1px solid #bfdbfe;
+  border-radius:20px;
+  padding:3px 12px;
+  margin-bottom:16px;
+  letter-spacing:.4px;
+}
+
+/* ── title ── */
+.title{
+  font-size:21px;font-weight:700;
+  color:var(--text);
+  line-height:1.4;
+  margin-bottom:14px;
+}
+
+/* ── intro ── */
+.intro{
+  font-size:14px;color:var(--text-sub);
+  line-height:1.8;
+  margin-bottom:20px;
+}
+.intro strong{color:var(--text);font-weight:600}
+
+/* ── info list ── */
+.info{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:28px}
+.info li{
+  display:flex;gap:10px;
+  font-size:13.5px;color:var(--text-sub);
+  line-height:1.65;
+}
+.info li .dot{
+  flex-shrink:0;width:6px;height:6px;
+  border-radius:50%;background:var(--accent);
+  margin-top:7px;
+}
+
+/* ── divider ── */
+.divider{border:none;border-top:1px solid var(--border);margin:24px 0}
+
+/* ── consent ── */
+.consent-label{
+  font-size:14px;font-weight:600;
+  color:var(--text);
+  margin-bottom:12px;
+}
+
+.radios{display:flex;flex-direction:column;gap:10px;margin-bottom:8px}
+
+.radio-opt{
+  display:flex;align-items:center;gap:14px;
+  padding:13px 18px;
+  border:1.5px solid var(--radio-bd);
+  border-radius:9px;
+  background:var(--radio-bg);
+  cursor:pointer;
+  transition:border-color .15s,background .15s,box-shadow .15s;
+  user-select:none;
+}
+.radio-opt:hover{border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.08)}
+.radio-opt.sel{border-color:var(--radio-sel-bd);background:var(--radio-sel-bg)}
+.radio-opt input{display:none}
+
+.rdot{
+  width:19px;height:19px;border-radius:50%;
+  border:2px solid var(--radio-bd);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  transition:border-color .15s;
+}
+.radio-opt.sel .rdot{border-color:var(--accent)}
+.rdot::after{
+  content:'';width:9px;height:9px;border-radius:50%;
+  background:var(--accent);opacity:0;
+  transition:opacity .15s,transform .15s;
+  transform:scale(.5);
+}
+.radio-opt.sel .rdot::after{opacity:1;transform:scale(1)}
+
+.rlabel{font-size:14px;color:var(--text);font-weight:400}
+
+/* ── error hint ── */
+.err{font-size:12.5px;color:var(--danger);margin-bottom:18px;display:none}
+.err.show{display:block}
+
+/* ── decline msg ── */
+.decline-msg{
+  display:none;
+  background:#fef2f2;border:1px solid #fecaca;
+  border-radius:9px;padding:14px 18px;
+  font-size:13.5px;color:#991b1b;
+  margin-bottom:18px;
+  line-height:1.6;
+}
+.decline-msg.show{display:block}
+
+/* ── footer ── */
+.footer{
+  display:flex;justify-content:flex-end;
+  border-top:1px solid var(--border);
+  padding-top:22px;margin-top:4px;
+}
+.btn{
+  font-family:inherit;font-size:14px;font-weight:600;
+  padding:11px 36px;border:none;border-radius:8px;
+  cursor:pointer;transition:background .15s,opacity .15s,transform .1s;
+}
+.btn:active{transform:scale(.97)}
+.btn-next{background:var(--accent);color:#fff}
+.btn-next:hover:not(:disabled){background:var(--accent-h)}
+.btn-next:disabled{opacity:.38;cursor:not-allowed}
+
+/* ── responsive ── */
+@media(max-width:600px){
+  .card{padding:28px 20px 24px;margin-top:24px}
+  .title{font-size:18px}
+  .hbar{padding:12px 16px}
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="hbar">
+  <div class="hbar-left"><strong>Trường Đại học Tôn Đức Thắng</strong> · Khảo sát nghiên cứu</div>
+  <div class="hbar-right">Study 2 · Thí nghiệm</div>
+</div>
+
+<!-- Card -->
+<div class="card">
+
+  <!-- Step indicator: 4 dots, first active -->
+  <div class="steps">
+    <div class="step active"></div>
+    <div class="step"></div>
+    <div class="step"></div>
+    <div class="step"></div>
+  </div>
+
+  <div class="badge">THÔNG TIN NGHIÊN CỨU</div>
+
+  <h1 class="title">Khảo sát về cách khách hàng nhìn nhận gợi ý sản phẩm trên app bán lẻ</h1>
+
+  <p class="intro">
+    Xin chào! Tôi là <strong>Lê Minh Triết</strong>, sinh viên tại Trường Đại học Tôn Đức Thắng.
+    Khảo sát này tìm hiểu cách khách hàng cảm nhận về gợi ý sản phẩm trên app bán lẻ.
+    Bạn sẽ đọc một tình huống mua sắm giả định, xem một màn hình app, rồi trả lời một số câu hỏi.
+  </p>
+
+  <ul class="info">
+    <li><span class="dot"></span><span>Thời gian dự kiến: khoảng <strong>10 phút</strong>.</span></li>
+    <li><span class="dot"></span><span>Việc tham gia là <strong>tự nguyện</strong>. Bạn có thể dừng khảo sát bất cứ lúc nào.</span></li>
+    <li><span class="dot"></span><span>Khảo sát <strong>không hỏi họ tên, số điện thoại hay email</strong> của bạn. Câu trả lời chỉ dùng cho nghiên cứu.</span></li>
+    <li><span class="dot"></span><span>Không có câu trả lời đúng hay sai. Hãy trả lời theo <strong>cảm nhận của bạn</strong>.</span></li>
+    <li><span class="dot"></span><span>Ở cuối khảo sát, chúng tôi sẽ <strong>giải thích thêm</strong> về mục đích nghiên cứu.</span></li>
+    <li><span class="dot"></span><span>Liên hệ sinh viên: Lê Minh Triết — <strong>724h0437@student.edu.vn</strong></span></li>
+  </ul>
+
+  <hr class="divider">
+
+  <p class="consent-label">Tôi đã đọc thông tin trên và đồng ý tham gia.</p>
+
+  <div class="radios">
+    <label class="radio-opt" id="opt-yes">
+      <input type="radio" name="consent" value="yes">
+      <div class="rdot"></div>
+      <span class="rlabel">Đồng ý</span>
+    </label>
+    <label class="radio-opt" id="opt-no">
+      <input type="radio" name="consent" value="no">
+      <div class="rdot"></div>
+      <span class="rlabel">Không đồng ý</span>
+    </label>
+  </div>
+
+  <p class="err" id="err">Vui lòng chọn một đáp án để tiếp tục.</p>
+  <div class="decline-msg" id="decline-msg">
+    Cảm ơn bạn đã dành thời gian xem xét. Vì bạn không đồng ý tham gia,
+    khảo sát sẽ dừng tại đây. Bạn có thể đóng trang này.
+  </div>
+
+  <div class="footer">
+    <button class="btn btn-next" id="btn-next" disabled>Tiếp →</button>
+  </div>
+
+
+</div><!-- /card -->
+
+<script>
+  const YES   = document.getElementById('opt-yes');
+  const NO    = document.getElementById('opt-no');
+  const BTN   = document.getElementById('btn-next');
+  const ERR   = document.getElementById('err');
+  const DMSG  = document.getElementById('decline-msg');
+
+  function select(opt) {
+    [YES, NO].forEach(o => o.classList.remove('sel'));
+    opt.classList.add('sel');
+    opt.querySelector('input').checked = true;
+    ERR.classList.remove('show');
+    DMSG.classList.remove('show');
+    BTN.disabled = false;
+  }
+
+  YES.addEventListener('click', () => select(YES));
+  NO.addEventListener('click',  () => select(NO));
+
+  BTN.addEventListener('click', () => {
+    const chosen = document.querySelector('input[name="consent"]:checked');
+    if (!chosen) { ERR.classList.add('show'); return; }
+
+    if (chosen.value === 'yes') {
+      window.location.href = 'screening.html';
+    } else {
+      window.location.href = 'thankyou.html?reason=decline';
+    }
+  });
+</script>
+</body>
+</html>
